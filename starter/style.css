@@ -1,17 +1,48 @@
-* {
-    /* border: 5px; */
-    box-sizing: border-box !important;
+body {
+    border: 5px solid white;
+    box-sizing: border-box;
 }
 
 .custom-gradient {
-    background-image: linear-gradient(to left, #040441, #548fce);
-    color: white;
-    height: 50px;
-    text-align: center;
-  }
+background-image: linear-gradient(to left, #040441, #548fce);
+color: white;
+height: 50px;
+text-align: center;
+}
 
- .title{
- font-size: 23px;
- padding-top: 7px;
- font-weight: bold;
- }
+.title{
+font-size: 23px;
+padding-top: 9px;
+font-weight: bold;
+}
+/* 
+.form-label{
+font-size: 25px;
+text-align: center;
+font-weight: bold;
+
+} */
+
+/* .search {
+margin : 10px 0px 0px 0px;
+background-color: #69a4e3;
+color: white;
+padding-bottom: 2px;
+border-radius: 4px;
+border: none;
+}  */
+
+/* .line {
+    border: none;
+    border-top: 1px solid #000;
+    margin: 15px 0px 8px 0;
+  } */
+
+/* .cities {
+    margin : 10px 0px 0px 0px;
+    background-color: #aaadb0;
+    color: white;
+    padding-bottom: 2px;
+    border-radius: 4px;
+    border: none;
+    }
