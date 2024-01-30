@@ -6,6 +6,7 @@ $(document).ready(function () {
     var futureWeatherEL = $('#forecast');
     var searchInput = $('#search-input');
     var searchButton = $('#search-button');
+    var historyEl = $('#history');
 
     var currentDate = dayjs();
     var formattedDate = currentDate.format('D/MM/YYYY');
@@ -176,16 +177,25 @@ $(document).ready(function () {
 }
 
 
-searchButton.on('click', searchCity)
+searchButton.on('click', searchCity);
+
+function searchHistory(event){
+    city = event.target.textContent;
+    getGeo(city);
+    currentWeatherEL.html('');
+}
 
 function searchCity(event) {
     event.preventDefault();
-    var userInput = searchInput.val();
+    var userInput = searchInput.val().trim();
     city = userInput;
     console.log("User input: ", userInput);
     getGeo(city);
     currentWeatherEL.html('');
     var searchHistory = $('<button>').text(userInput);
+    historyEL.append(searchHistory);
+    searchHistory.on('click', searchHistory);
+    $('#search-button').after(searchHistory);
     //append the button under the search button
     //link the buttons to relevant weather data
 
