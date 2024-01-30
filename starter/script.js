@@ -116,7 +116,7 @@ $(document).ready(function () {
         //function to save search input as button in list-group div
 
 
-        function displayCard(current) {
+        function displayCard(current, index) {
             // for (let i = 0; i < 5; i++) {
             //     var nextDay = currentDate.add(i, 'day');
             // nextFiveDates.push(nextDay);
@@ -143,8 +143,6 @@ $(document).ready(function () {
             //display current weather in today section
             // var currentTitle = $('<h3>').text(`${city} (${formattedDate})`);//add icon
 
-
-
             // var currentTitle = $('<h3>').text(dayjs(current.dt_txt).format('D/MM/YYYY'));//add icon
             // futureWeatherEL.append(currentTitle)
             // var iconImg = $('<img>').attr('src', iconURL);
@@ -156,10 +154,14 @@ $(document).ready(function () {
             // var currentHumidity = $('<p>').text(`Humidity: ${todaysHumidity} %`);
             // futureWeatherEL.append(currentHumidity);
 
-            var futureCards = document.createElement('div');
-            futureCards.classList.add('card', 'mb-3');
-            futureCards.innerHTML = `
-            <div id="future-card" class="card text-center">
+
+        }
+
+
+        var futureCards = document.createElementWithClasses('card', 'mb-3', 'mx-2');
+        futureCards.classList.add('future-card');
+        futureCards.innerHTML = `
+            <div class="card text-center">
             <div class="card-body">
             <h5 class="card-title">${dayjs(current.dt_txt).format('D/MM/YYYY')}</h5>
             <img src="${iconURL}" class="card-img-top" alt="Daily weather icon">
@@ -168,33 +170,26 @@ $(document).ready(function () {
             <p>Humidity: ${todaysHumidity} %</p>
             </div>
             </div>`;
-            futureWeatherEL.append(futureCards);
-
-    }}
-
-    // created 5 seperate html divs with jquery for each date
-
-
-    //function to display 5 day forecast in forecast section
-
-    //1. Sort out 5 day weather forecast input (maybe with an array)
-    //2. Set up a basic page load template (London as default)
-    //3. Set up a search function that adds a button to the sidebar and changes the main content on page
-    //4.get icons to load
-
-
-
-    searchButton.on('click', searchCity);
-    function searchCity(event) {
-        event.preventDefault();
-        var userInput = searchInput.val();
-        city = userInput;
-        console.log("User input: ", userInput);
-        getGeo(city);
-        currentWeatherEL.html('');
-        var searchHistory = $('<button>').text(userInput);
-        //append the button under the search button
-        //link the buttons to relevant weather data
+        futureWeatherEL.append(futureCards);
 
     }
-});
+}
+
+
+searchButton.on('click', searchCity)
+
+function searchCity(event) {
+    event.preventDefault();
+    var userInput = searchInput.val();
+    city = userInput;
+    console.log("User input: ", userInput);
+    getGeo(city);
+    currentWeatherEL.html('');
+    var searchHistory = $('<button>').text(userInput);
+    //append the button under the search button
+    //link the buttons to relevant weather data
+
+}
+);
+
+

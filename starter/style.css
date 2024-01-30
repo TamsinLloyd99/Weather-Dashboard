@@ -20,3 +20,17 @@ iconImg {
     width:20%;
     height: 20%;
 } */
+
+#forecast-container{
+    width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+#forecast .future-card {
+    display: inline-block;
+    width: calc(20% - 10px); /* adjust as needed */
+    margin-bottom: 20px;
+    margin-right: 10px;
+  }
