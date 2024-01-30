@@ -1,17 +1,16 @@
-
+var searchInput = $('#search-input');
+var searchButton = $('#search-button');
+var historyEl = $('#history');
 
 //page loads automatically on London
 $(document).ready(function () {
     var currentWeatherEL = $('#today');
     var futureWeatherEL = $('#forecast');
-    var searchInput = $('#search-input');
-    var searchButton = $('#search-button');
-    var historyEl = $('#history');
+
 
     var currentDate = dayjs();
     var formattedDate = currentDate.format('D/MM/YYYY');
     console.log(currentDate);
-    var nextFiveDates = [];
 
     var API_KEY = 'b6607d95fdf680a89ffd501aedb4f29a';
     // var city = "London";//needs changing to match search box
@@ -25,6 +24,7 @@ $(document).ready(function () {
     let roundedTemp;
     let todaysWind;
     let todaysHumidity;
+    let iconURL;
 
     function getGeo(city) {
         var geoLocateURL = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${API_KEY}`;
@@ -32,20 +32,14 @@ $(document).ready(function () {
             .then(function (response) {
                 return response.json();
             })
-            //     .catch(error => {
-            //         // Handle any errors that occurred during the request
-            //         console.error(error);
-            // })
+        
             .then(function (data) {
                 console.log("Current Weather", data[0]);
-                // lat = data[0].lat;
-                // lon = data[0].lon;
+                
                 getWeather(data[0])
             })
     }
-    // console.log(lat);
-    // console.log(lon);
-    // weatherPrediction(lat,lon);
+
     function getWeather(location) {
         console.log(location);
         //     lat = location.lat;
@@ -61,7 +55,9 @@ $(document).ready(function () {
             .then(function (data) {
                 console.log("Future Forecast", data);
                 displayCurrent(data.list[0], city);
+                console.log("Display current: ", data.list[0]);
                 displayForecast(data.list);
+                console.log("Display forecast: ", data.list);
             })
     }
 
@@ -141,26 +137,11 @@ $(document).ready(function () {
 
             var iconURL = `https://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`;
 
-            //display current weather in today section
-            // var currentTitle = $('<h3>').text(`${city} (${formattedDate})`);//add icon
-
-            // var currentTitle = $('<h3>').text(dayjs(current.dt_txt).format('D/MM/YYYY'));//add icon
-            // futureWeatherEL.append(currentTitle)
-            // var iconImg = $('<img>').attr('src', iconURL);
-            // currentTitle.append(iconImg);
-            // var currentTemp = $('<p>').text(`Temperature: ${roundedTemp} °C`);
-            // futureWeatherEL.append(currentTemp);
-            // var currentWind = $('<p>').text(`Wind Speed: ${todaysWind} KPH`);
-            // futureWeatherEL.append(currentWind);
-            // var currentHumidity = $('<p>').text(`Humidity: ${todaysHumidity} %`);
-            // futureWeatherEL.append(currentHumidity);
-
-
         }
 
 
-        var futureCards = document.createElementWithClasses('card', 'mb-3', 'mx-2');
-        futureCards.classList.add('future-card');
+        var futureCards = document.createElement('div');
+        futureCards.classList.add('card', 'mb-3', 'mx-2', 'future-card');
         futureCards.innerHTML = `
             <div class="card text-center">
             <div class="card-body">
@@ -172,14 +153,12 @@ $(document).ready(function () {
             </div>
             </div>`;
         futureWeatherEL.append(futureCards);
-
+///can't get these to show up (iconURl undefined)
     }
-}
 
+    searchButton.on('click', searchCity);
 
-searchButton.on('click', searchCity);
-
-function searchHistory(event){
+function searchHistory(event) {
     city = event.target.textContent;
     getGeo(city);
     currentWeatherEL.html('');
@@ -193,13 +172,16 @@ function searchCity(event) {
     getGeo(city);
     currentWeatherEL.html('');
     var searchHistory = $('<button>').text(userInput);
-    historyEL.append(searchHistory);
+    historyEl.append(searchHistory);
     searchHistory.on('click', searchHistory);
     $('#search-button').after(searchHistory);
     //append the button under the search button
     //link the buttons to relevant weather data
 
-}
-);
+};
+
+})
+
+
 
 
