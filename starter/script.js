@@ -78,7 +78,9 @@ $(document).ready(function () {
         var iconURL = `https://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`;
 
         //display current weather in today section
-       
+
+        currentWeatherEL.css('border', '1px solid black');
+        currentWeatherEL.css('padding', '5px');
         var currentTitle = $('<h3>').text(`${city} (${formattedDate})`);//add icon
         currentWeatherEL.append(currentTitle)
         var iconImg = $('<img>').attr('src', iconURL);
@@ -99,24 +101,24 @@ $(document).ready(function () {
         futureWeatherEL.html('');
         $('<h2>').text('5 Day Forecast').appendTo(futureWeatherEL);
         // displayCard(current)
-    // }
-    function noonCall (current){
-    return current.dt_txt.includes('12')
-    //function to change display to searched city/location
+        // }
+        function noonCall(current) {
+            return current.dt_txt.includes('12')
+            //function to change display to searched city/location
 
-    }
-    var futureForecast = current.filter(noonCall);
-    console.log(futureForecast);
-    for (let i = 0; i < futureForecast.length; i++) {
-        displayCard(futureForecast[i]);
-        
-    }
-    //function to save search input as button in list-group div
+        }
+        var futureForecast = current.filter(noonCall);
+        console.log(futureForecast);
+        for (let i = 0; i < futureForecast.length; i++) {
+            displayCard(futureForecast[i]);
+
+        }
+        //function to save search input as button in list-group div
 
 
-    function displayCard(current) {
-        // for (let i = 0; i < 5; i++) {
-        //     var nextDay = currentDate.add(i, 'day');
+        function displayCard(current) {
+            // for (let i = 0; i < 5; i++) {
+            //     var nextDay = currentDate.add(i, 'day');
             // nextFiveDates.push(nextDay);
 
             // var formattedDates = nextFiveDates.map(date => date.format('D/MM/YYYY'));
@@ -141,26 +143,36 @@ $(document).ready(function () {
             //display current weather in today section
             // var currentTitle = $('<h3>').text(`${city} (${formattedDate})`);//add icon
 
-            // var card = document.createElement('div');
-            // card.classList.add('card');
-            // futureWeatherEL.append(card);
-            //var tempP = document.createElement('p');
-            //tempP.classList.add('card-text');
 
-            var currentTitle = $('<h3>').text(dayjs(current.dt_txt).format('D/MM/YYYY'));//add icon
-            futureWeatherEL.append(currentTitle)
-            var iconImg = $('<img>').attr('src', iconURL);
-            currentTitle.append(iconImg);
-            var currentTemp = $('<p>').text(`Temperature: ${roundedTemp} °C`);
-            futureWeatherEL.append(currentTemp);
-            var currentWind = $('<p>').text(`Wind Speed: ${todaysWind} KPH`);
-            futureWeatherEL.append(currentWind);
-            var currentHumidity = $('<p>').text(`Humidity: ${todaysHumidity} %`);
-            futureWeatherEL.append(currentHumidity);
-        }
-    }
 
-    //created 5 seperate html divs with jquery for each date
+            // var currentTitle = $('<h3>').text(dayjs(current.dt_txt).format('D/MM/YYYY'));//add icon
+            // futureWeatherEL.append(currentTitle)
+            // var iconImg = $('<img>').attr('src', iconURL);
+            // currentTitle.append(iconImg);
+            // var currentTemp = $('<p>').text(`Temperature: ${roundedTemp} °C`);
+            // futureWeatherEL.append(currentTemp);
+            // var currentWind = $('<p>').text(`Wind Speed: ${todaysWind} KPH`);
+            // futureWeatherEL.append(currentWind);
+            // var currentHumidity = $('<p>').text(`Humidity: ${todaysHumidity} %`);
+            // futureWeatherEL.append(currentHumidity);
+
+            var futureCards = document.createElement('div');
+            futureCards.classList.add('card', 'mb-3');
+            futureCards.innerHTML = `
+            <div id="future-card" class="card text-center">
+            <div class="card-body">
+            <h5 class="card-title">${dayjs(current.dt_txt).format('D/MM/YYYY')}</h5>
+            <img src="${iconURL}" class="card-img-top" alt="Daily weather icon">
+            <p class="card-text"> Temperature: ${roundedTemp} °C</p>
+            <p>Wind Speed: ${todaysWind} KPH</p>
+            <p>Humidity: ${todaysHumidity} %</p>
+            </div>
+            </div>`;
+            futureWeatherEL.append(futureCards);
+
+    }}
+
+    // created 5 seperate html divs with jquery for each date
 
 
     //function to display 5 day forecast in forecast section
@@ -180,5 +192,9 @@ $(document).ready(function () {
         console.log("User input: ", userInput);
         getGeo(city);
         currentWeatherEL.html('');
-    } 
-})
+        var searchHistory = $('<button>').text(userInput);
+        //append the button under the search button
+        //link the buttons to relevant weather data
+
+    }
+});
