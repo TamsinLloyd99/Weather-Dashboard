@@ -13,7 +13,7 @@ $(document).ready(function () {
     console.log(currentDate);
 
     var API_KEY = 'b6607d95fdf680a89ffd501aedb4f29a';
-    // var city = "London";//needs changing to match search box
+
 
 
 
@@ -32,18 +32,17 @@ $(document).ready(function () {
             .then(function (response) {
                 return response.json();
             })
-        
+
             .then(function (data) {
                 console.log("Current Weather", data[0]);
-                
+
                 getWeather(data[0])
             })
     }
 
     function getWeather(location) {
         console.log(location);
-        //     lat = location.lat;
-        //     lon = location.lon;
+
         var { lat, lon } = location;
         var city = location.name;
         var futureForecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
@@ -93,15 +92,13 @@ $(document).ready(function () {
     }
 
     function displayForecast(forecast) {
-        // console.log("Latitude and Longitude" , lat,lon);
+
         var current = forecast;
         futureWeatherEL.html('');
         $('<h2>').text('5 Day Forecast').appendTo(futureWeatherEL);
-        // displayCard(current)
-        // }
+
         function noonCall(current) {
             return current.dt_txt.includes('12')
-            //function to change display to searched city/location
 
         }
         var futureForecast = current.filter(noonCall);
@@ -110,20 +107,11 @@ $(document).ready(function () {
             displayCard(futureForecast[i]);
 
         }
-        //function to save search input as button in list-group div
 
 
-        function displayCard(current, index) {
-            // for (let i = 0; i < 5; i++) {
-            //     var nextDay = currentDate.add(i, 'day');
-            // nextFiveDates.push(nextDay);
 
-            // var formattedDates = nextFiveDates.map(date => date.format('D/MM/YYYY'));
+        function displayCard(current) {
 
-            // formattedDates.forEach(date => {
-            //     var dateEl = $('<button>').text(date);
-            //     futureWeatherEL.append(dateEl);
-            // })
 
             todaysTemp = current.main.temp - 273.15;
             console.log("todays temp: ", todaysTemp);
@@ -137,12 +125,12 @@ $(document).ready(function () {
 
             var iconURL = `https://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`;
 
-        }
 
 
-        var futureCards = document.createElement('div');
-        futureCards.classList.add('card', 'mb-3', 'mx-2', 'future-card');
-        futureCards.innerHTML = `
+
+            var futureCards = document.createElement('div');
+            futureCards.classList.add('card', 'mb-3', 'mx-2', 'future-card');
+            futureCards.innerHTML = `
             <div class="card text-center">
             <div class="card-body">
             <h5 class="card-title">${dayjs(current.dt_txt).format('D/MM/YYYY')}</h5>
@@ -152,36 +140,53 @@ $(document).ready(function () {
             <p>Humidity: ${todaysHumidity} %</p>
             </div>
             </div>`;
-        futureWeatherEL.append(futureCards);
-///can't get these to show up (iconURl undefined)
+            futureWeatherEL.append(futureCards);
+        }
+        ///can't get these to show up (iconURl undefined)
     }
 
     searchButton.on('click', searchCity);
 
-function searchHistory(event) {
-    city = event.target.textContent;
-    getGeo(city);
-    currentWeatherEL.html('');
-}
+    function searchHistory(event) {
+        city = $(event.currentTarget).text();
+        getGeo(city);
+        currentWeatherEL.html('');
+        //not working
+    }
 
-function searchCity(event) {
-    event.preventDefault();
-    var userInput = searchInput.val().trim();
-    city = userInput;
-    console.log("User input: ", userInput);
-    getGeo(city);
-    currentWeatherEL.html('');
-    var searchHistory = $('<button>').text(userInput);
-    historyEl.append(searchHistory);
-    searchHistory.on('click', searchHistory);
-    $('#search-button').after(searchHistory);
-    //append the button under the search button
-    //link the buttons to relevant weather data
+    function searchCity(event) {
+        event.preventDefault();
+        var userInput = searchInput.val();
+        city = userInput;
+        console.log("User input: ", userInput);
 
-};
+        if (userInput) {
+            getGeo(city)
+                .then(function (data) {
+                    //.then returning undefined
+                    //added to stop empty input creating buttons
+                    currentWeatherEL.html('');
+                    searchInput.value = '';
+                    var listItem = $('<button>').text(userInput);
+                    listItem.css('width', '100%');
+                    listItem.on('click', searchHistory);
+                    historyEl.append(listItem);
+                    $('#search-button').after(listItem);
+                })
+                .catch(function (error) {
+                    console.log('Error: ' + error.message);
+                });
+        } else {
+            console.log('Please enter a city name.');
+
+        }
+    };
 
 })
 
 
 
-
+//searchinput not clearing
+//buttons not sitting under line
+//buttons not linking to relevant weather data
+//5 day cards not showing up

@@ -21,7 +21,7 @@ iconImg {
     height: 20%;
 } */
 
-#forecast-container{
+/* #forecast-container{
     width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -31,6 +31,6 @@ iconImg {
 #forecast .future-card {
     display: inline-block;
     width: calc(20% - 10px); /* adjust as needed */
-    margin-bottom: 20px;
-    margin-right: 10px;
-  }
+    /* margin-bottom: 20px; */
+    /* margin-right: 10px; */
+  /* } */
