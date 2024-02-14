@@ -144,53 +144,57 @@ $(document).ready(function () {
 
     searchButton.on('click', searchCity);
 
-    function searchHistory(event) {
-        city = $(event.currentTarget).text();
-        getGeo(city);
-        currentWeatherEL.html('');
-        //not working
-    }
-
+    
     function searchCity(event) {
         event.preventDefault();
         var userInput = searchInput.val();
         city = userInput;
         console.log("User input: ", userInput);
-
+        
         if (userInput) {
             getGeo(city)
-                .then(function (data) {
-                    // .then block
-                    currentWeatherEL.html('');
-                    searchInput.val('');
-
-                    var listItem = $('<button>').text(userInput);
-
-                    listItem.css({
-                        'width': searchInput.width(), // Set width to the search bar's width
-                        'margin-bottom': '10px', // Add a bottom margin for separation
-                        'background-color': '#dddddd', // Grey background color
-                        'border': '0px solid #999999', // Border color
-                        'border-radius': '5px', // Rounded corners
-                        'padding': '5px', // Padding for content
-                        'cursor': 'pointer' // Change cursor on hover
-                    });
-
-                    listItem.on('click', searchHistory);
-                    historyEl.append(listItem);
-                    // historyEl.append('<hr>');
-                })
-                .catch(function (error) {
-                    console.log('Error: ' + error.message);
+            .then(function (data) {
+                // .then block
+                currentWeatherEL.html('');
+                searchInput.val('');
+                
+                var listItem = $('<button>').text(userInput);
+                
+                listItem.css({
+                    'width': searchInput.width(), // Set width to the search bar's width
+                    'margin-bottom': '10px', // Add a bottom margin for separation
+                    'background-color': '#dddddd', // Grey background color
+                    'border': '0px solid #999999', // Border color
+                    'border-radius': '5px', // Rounded corners
+                    'padding': '5px', // Padding for content
+                    'cursor': 'pointer' // Change cursor on hover
                 });
+                
+                listItem.addClass('history-item');
+                historyEl.append(listItem);
+                // historyEl.append('<hr>');
+            })
+            .catch(function (error) {
+                console.log('Error: ' + error.message);
+            });
         } else {
             console.log('Please enter a city name.');
         }
     };
-
+    
 })
 
-//searchinput not clearing
-//buttons not sitting under line
-//buttons not linking to relevant weather data
-//5 day cards not showing up
+historyEl.on('click', '.history-item', function(event) {
+    event.preventDefault();
+    var selectedCity = $(event.currentTarget).text();
+    getGeo(selectedCity)
+        .then(function (data) {
+            currentWeatherEL.html('');
+            displayCurrent(data.current, selectedCity);
+            displayForecast(data.forecast);
+        })
+        .catch(function (error) {
+            console.log('Error: ' + error.message);
+        });
+});//function not working
+
