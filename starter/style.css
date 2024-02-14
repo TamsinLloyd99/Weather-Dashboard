@@ -15,22 +15,16 @@ font-size: 23px;
 padding-top: 9px;
 font-weight: bold;
 }
-/* 
-iconImg {
-    width:20%;
-    height: 20%;
-} */
 
-/* #forecast-container{
-    width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+
+.card{
+  background-color: #040441 !important;
+  color: white !important;
+  font-size: small !important;
+  text-align: start !important;
 }
 
 #forecast .future-card {
     display: inline-block;
     width: calc(20% - 10px); /* adjust as needed */
-    /* margin-bottom: 20px; */
-    /* margin-right: 10px; */
-  /* } */
+}

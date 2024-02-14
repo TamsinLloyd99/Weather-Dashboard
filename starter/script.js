@@ -1,12 +1,11 @@
 var searchInput = $('#search-input');
 var searchButton = $('#search-button');
 var historyEl = $('#history');
+var futureWeatherEL = $('#forecast-container');
 
 //page loads automatically on London
 $(document).ready(function () {
     var currentWeatherEL = $('#today');
-    var futureWeatherEL = $('#forecast');
-
 
     var currentDate = dayjs();
     var formattedDate = currentDate.format('D/MM/YYYY');
@@ -28,7 +27,7 @@ $(document).ready(function () {
 
     function getGeo(city) {
         var geoLocateURL = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${API_KEY}`;
-        fetch(geoLocateURL)
+        return fetch(geoLocateURL)
             .then(function (response) {
                 return response.json();
             })
@@ -80,6 +79,11 @@ $(document).ready(function () {
         var currentTitle = $('<h3>').text(`${city} (${formattedDate})`);//add icon
         currentWeatherEL.append(currentTitle)
         var iconImg = $('<img>').attr('src', iconURL);
+        iconImg.css({
+            'width': '50px',   // Set the width to your desired size
+            'height': '50px'   // Set the height to your desired size
+        });
+        
         currentTitle.append(iconImg);
         var currentTemp = $('<p>').text(`Temperature: ${roundedTemp} °C`);
         currentWeatherEL.append(currentTemp);
@@ -103,6 +107,8 @@ $(document).ready(function () {
         }
         var futureForecast = current.filter(noonCall);
         console.log(futureForecast);
+
+        // var row = $('<div>').addClass('row');
         for (let i = 0; i < futureForecast.length; i++) {
             displayCard(futureForecast[i]);
 
@@ -110,39 +116,30 @@ $(document).ready(function () {
 
 
 
-        function displayCard(current) {
-
-
-            todaysTemp = current.main.temp - 273.15;
-            console.log("todays temp: ", todaysTemp);
-            roundedTemp = Math.floor(todaysTemp);
-            todaysWind = current.wind['speed'];
-            console.log("todays wind: ", todaysWind);
-            todaysHumidity = current.main.humidity;
-            console.log("todays humidity: ", todaysHumidity);
-
-
-
-            var iconURL = `https://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`;
-
-
-
-
-            var futureCards = document.createElement('div');
-            futureCards.classList.add('card', 'mb-3', 'mx-2', 'future-card');
-            futureCards.innerHTML = `
-            <div class="card text-center">
-            <div class="card-body">
-            <h5 class="card-title">${dayjs(current.dt_txt).format('D/MM/YYYY')}</h5>
-            <img src="${iconURL}" class="card-img-top" alt="Daily weather icon">
-            <p class="card-text"> Temperature: ${roundedTemp} °C</p>
-            <p>Wind Speed: ${todaysWind} KPH</p>
-            <p>Humidity: ${todaysHumidity} %</p>
-            </div>
-            </div>`;
-            futureWeatherEL.append(futureCards);
+        function displayCard(data) {
+            var cardContainer = $('<div>').addClass('col mb-3');
+            var card = $('<div>').addClass('card');
+            var cardBody = $('<div>').addClass('card-body');
+            var cardTitle = $('<h5>').addClass('card-title').text(dayjs(data.dt_txt).format('D/MM/YYYY'));
+            var iconURL = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+            var cardImage = $('<img>').addClass('card-img-top').attr('src', iconURL).attr('alt', 'Daily weather icon');
+            cardImage.css({
+                'width': '50px',   // Set the width to your desired size
+                'height': '50px'   // Set the height to your desired size
+            });
+            
+            var cardTextTemp = $('<p>').addClass('card-text').text(`Temperature: ${Math.floor(data.main.temp - 273.15)} °C`);
+            var cardTextWind = $('<p>').text(`Wind Speed: ${data.wind.speed} KPH`);
+            var cardTextHumidity = $('<p>').text(`Humidity: ${data.main.humidity} %`);
+        
+            // Append elements to build the card structure
+            cardBody.append(cardTitle, cardImage, cardTextTemp, cardTextWind, cardTextHumidity);
+            card.append(cardBody);
+            cardContainer.append(card);
+            futureWeatherEL.append(cardContainer);
         }
-        ///can't get these to show up (iconURl undefined)
+        
+
     }
 
     searchButton.on('click', searchCity);
@@ -163,28 +160,35 @@ $(document).ready(function () {
         if (userInput) {
             getGeo(city)
                 .then(function (data) {
-                    //.then returning undefined
-                    //added to stop empty input creating buttons
+                    // .then block
                     currentWeatherEL.html('');
-                    searchInput.value = '';
+                    searchInput.val('');
+
                     var listItem = $('<button>').text(userInput);
-                    listItem.css('width', '100%');
+
+                    listItem.css({
+                        'width': searchInput.width(), // Set width to the search bar's width
+                        'margin-bottom': '10px', // Add a bottom margin for separation
+                        'background-color': '#dddddd', // Grey background color
+                        'border': '0px solid #999999', // Border color
+                        'border-radius': '5px', // Rounded corners
+                        'padding': '5px', // Padding for content
+                        'cursor': 'pointer' // Change cursor on hover
+                    });
+
                     listItem.on('click', searchHistory);
                     historyEl.append(listItem);
-                    $('#search-button').after(listItem);
+                    // historyEl.append('<hr>');
                 })
                 .catch(function (error) {
                     console.log('Error: ' + error.message);
                 });
         } else {
             console.log('Please enter a city name.');
-
         }
     };
 
 })
-
-
 
 //searchinput not clearing
 //buttons not sitting under line
