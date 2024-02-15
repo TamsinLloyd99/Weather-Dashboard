@@ -203,40 +203,6 @@ $(document).ready(function () {
         }
     }
 
-    // if (userInput) {
-    //         .then(function (data) {
-    //     // .then block
-    //     currentWeatherEL.html('');
-    //     searchInput.val('');
-
-    //     var listItem = $('<button>').text(userInput);
-    //     listItem.attr('data-city', userInput);
-    //     listItem.attr('type', 'button');
-
-
-    //         listItem.css({
-    //             'width': searchInput.width(), // Set width to the search bar's width
-    //             'margin-bottom': '10px', // Add a bottom margin for separation
-    //             'background-color': '#dddddd', // Grey background color
-    //             'border': '0px solid #999999', // Border color
-    //             'border-radius': '5px', // Rounded corners
-    //             'padding': '5px', // Padding for content
-    //             'cursor': 'pointer' // Change cursor on hover
-    //         });
-
-    //         listItem.addClass('history-item');
-    //         historyEl.append(listItem);
-    //         // historyEl.append('<hr>');
-    //     })
-    //             .catch(function (error) {
-    //                 console.log('Error: ' + error.message);
-    //             });
-    //     } else {
-    //         console.log('Please enter a city name.');
-    //     }
-    // };
-
-    // })
     function btnValidator(event) {
         if (!$(event.target).hasClass('history-item')) {
             return;
