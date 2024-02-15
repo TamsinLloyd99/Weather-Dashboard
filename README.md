@@ -35,3 +35,8 @@ The temperature
 The humidity
 
 When a user clicks on a city in the search history they are again presented with current and future conditions for that city.
+
+<img width="938" alt="image" src="https://github.com/TamsinLloyd99/Weather-Dashboard/assets/152029548/cb674087-99e4-4f82-9131-73b55786a47f">
+
+Deployed link: https://tamsinlloyd99.github.io/Weather-Dashboard/starter/ 
+
