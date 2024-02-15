@@ -17,17 +17,17 @@ $(document).ready(function () {
 
 
 
-    let lat;
-    let lon;
-    let cityName;
+    // let lat;
+    // let lon;
+    // let cityName;
     let todaysTemp;
     let roundedTemp;
     let todaysWind;
     let todaysHumidity;
-    let iconURL;
+    // let iconURL;
 
-    function getGeo(city) {
-        var geoLocateURL = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${API_KEY}`;
+    function getGeo(citySearch) {
+        var geoLocateURL = `http://api.openweathermap.org/geo/1.0/direct?q=${citySearch}&limit=5&appid=${API_KEY}`;
         return fetch(geoLocateURL)
             .then(function (response) {
                 return response.json();
@@ -35,15 +35,16 @@ $(document).ready(function () {
 
             .then(function (data) {
                 console.log("Current Weather", data[0]);
-                setHistory(city);
+
                 getWeather(data[0])
             })
     }
 
     function getWeather(location) {
         console.log(location);
-
-        var { lat, lon } = location;
+        var lat = location.lat;
+        console.log(lat);
+        var lon = location.lon;
         var city = location.name;
         var futureForecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
 
@@ -154,18 +155,19 @@ $(document).ready(function () {
             return;
         }
         event.preventDefault();
-        var city = searchInput.val();
+        var citySearch = searchInput.val().trim();
         // city = userInput;
         // console.log("User input: ", userInput);
-        getGeo(city)
+        setHistory(citySearch);
+        getGeo(citySearch)
         searchInput.val('');
 
     }
 
 
-    function setHistory(city) {
-        console.log("City: ", city);
-        cityHistory.push(city);
+    function setHistory(citySearch) {
+        console.log("City: ", citySearch);
+        cityHistory.push(citySearch);
         localStorage.setItem('history', JSON.stringify(cityHistory));
         displayCityHistory()
     }
@@ -240,8 +242,9 @@ $(document).ready(function () {
             return;
         }
         // event.preventDefault();
-        var city = $(event.currentTarget).text();
-        getGeo(city)
+        var citySearch = $(event.target).attr('data-city');
+        console.log("citySearch: ", citySearch);
+        getGeo(citySearch)
 
     }
 
