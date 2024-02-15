@@ -1,11 +1,12 @@
-var searchInput = $('#search-input');
-var searchButton = $('#search-button');
-var historyEl = $('#history');
-var futureWeatherEL = $('#forecast-container');
 
 //page loads automatically on London
 $(document).ready(function () {
     var currentWeatherEL = $('#today');
+    var searchInput = $('#search-input');
+    var searchButton = $('#search-button');
+    var historyEl = $('#history');
+    var futureWeatherEL = $('#forecast-container');
+    var cityHistory = [];
 
     var currentDate = dayjs();
     var formattedDate = currentDate.format('D/MM/YYYY');
@@ -34,7 +35,7 @@ $(document).ready(function () {
 
             .then(function (data) {
                 console.log("Current Weather", data[0]);
-
+                setHistory(city);
                 getWeather(data[0])
             })
     }
@@ -73,7 +74,7 @@ $(document).ready(function () {
         var iconURL = `https://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`;
 
         //display current weather in today section
-
+        currentWeatherEL.html('');
         currentWeatherEL.css('border', '1px solid black');
         currentWeatherEL.css('padding', '5px');
         var currentTitle = $('<h3>').text(`${city} (${formattedDate})`);//add icon
@@ -83,7 +84,7 @@ $(document).ready(function () {
             'width': '50px',   // Set the width to your desired size
             'height': '50px'   // Set the height to your desired size
         });
-        
+
         currentTitle.append(iconImg);
         var currentTemp = $('<p>').text(`Temperature: ${roundedTemp} °C`);
         currentWeatherEL.append(currentTemp);
@@ -127,74 +128,128 @@ $(document).ready(function () {
                 'width': '50px',   // Set the width to your desired size
                 'height': '50px'   // Set the height to your desired size
             });
-            
+
             var cardTextTemp = $('<p>').addClass('card-text').text(`Temperature: ${Math.floor(data.main.temp - 273.15)} °C`);
             var cardTextWind = $('<p>').text(`Wind Speed: ${data.wind.speed} KPH`);
             var cardTextHumidity = $('<p>').text(`Humidity: ${data.main.humidity} %`);
-        
+
             // Append elements to build the card structure
             cardBody.append(cardTitle, cardImage, cardTextTemp, cardTextWind, cardTextHumidity);
             card.append(cardBody);
             cardContainer.append(card);
             futureWeatherEL.append(cardContainer);
         }
-        
+
 
     }
 
     searchButton.on('click', searchCity);
 
-    
+
+
+
+
     function searchCity(event) {
-        event.preventDefault();
-        var userInput = searchInput.val();
-        city = userInput;
-        console.log("User input: ", userInput);
-        
-        if (userInput) {
-            getGeo(city)
-            .then(function (data) {
-                // .then block
-                currentWeatherEL.html('');
-                searchInput.val('');
-                
-                var listItem = $('<button>').text(userInput);
-                
-                listItem.css({
-                    'width': searchInput.width(), // Set width to the search bar's width
-                    'margin-bottom': '10px', // Add a bottom margin for separation
-                    'background-color': '#dddddd', // Grey background color
-                    'border': '0px solid #999999', // Border color
-                    'border-radius': '5px', // Rounded corners
-                    'padding': '5px', // Padding for content
-                    'cursor': 'pointer' // Change cursor on hover
-                });
-                
-                listItem.addClass('history-item');
-                historyEl.append(listItem);
-                // historyEl.append('<hr>');
-            })
-            .catch(function (error) {
-                console.log('Error: ' + error.message);
-            });
-        } else {
-            console.log('Please enter a city name.');
+        if (!searchInput.val()) {
+            return;
         }
-    };
-    
+        event.preventDefault();
+        var city = searchInput.val();
+        // city = userInput;
+        // console.log("User input: ", userInput);
+        getGeo(city)
+        searchInput.val('');
+
+    }
+
+
+    function setHistory(city) {
+        console.log("City: ", city);
+        cityHistory.push(city);
+        localStorage.setItem('history', JSON.stringify(cityHistory));
+        displayCityHistory()
+    }
+
+    function displayCityHistory() {
+        historyEl.html('');
+        for (let i = 0; i < cityHistory.length; i++) {
+            var listItem = $('<button>');
+            listItem.text(cityHistory[i]);
+            listItem.attr('data-city', cityHistory[i]);
+            listItem.attr('type', 'button');
+            listItem.addClass('history-item');
+            listItem.css({
+                'width': searchInput.width(), // Set width to the search bar's width
+                'margin-bottom': '10px', // Add a bottom margin for separation
+                'background-color': '#dddddd', // Grey background color
+                'border': '0px solid #999999', // Border color
+                'border-radius': '5px', // Rounded corners
+                'padding': '5px', // Padding for content
+                'cursor': 'pointer' // Change cursor on hover
+            });
+
+            historyEl.append(listItem);
+
+        }
+    }
+
+    function deployBtnStorage() {
+        var history = localStorage.getItem('search-history');
+        if (history) {
+            cityHistory = JSON.parse(history);
+            displayCityHistory();
+        }
+    }
+
+    // if (userInput) {
+    //         .then(function (data) {
+    //     // .then block
+    //     currentWeatherEL.html('');
+    //     searchInput.val('');
+
+    //     var listItem = $('<button>').text(userInput);
+    //     listItem.attr('data-city', userInput);
+    //     listItem.attr('type', 'button');
+
+
+    //         listItem.css({
+    //             'width': searchInput.width(), // Set width to the search bar's width
+    //             'margin-bottom': '10px', // Add a bottom margin for separation
+    //             'background-color': '#dddddd', // Grey background color
+    //             'border': '0px solid #999999', // Border color
+    //             'border-radius': '5px', // Rounded corners
+    //             'padding': '5px', // Padding for content
+    //             'cursor': 'pointer' // Change cursor on hover
+    //         });
+
+    //         listItem.addClass('history-item');
+    //         historyEl.append(listItem);
+    //         // historyEl.append('<hr>');
+    //     })
+    //             .catch(function (error) {
+    //                 console.log('Error: ' + error.message);
+    //             });
+    //     } else {
+    //         console.log('Please enter a city name.');
+    //     }
+    // };
+
+    // })
+    function btnValidator(event) {
+        if (!$(event.target).hasClass('history-item')) {
+            return;
+        }
+        // event.preventDefault();
+        var city = $(event.currentTarget).text();
+        getGeo(city)
+
+    }
+
+    historyEl.on('click', btnValidator);
+    deployBtnStorage()
+
+
 })
 
-historyEl.on('click', '.history-item', function(event) {
-    event.preventDefault();
-    var selectedCity = $(event.currentTarget).text();
-    getGeo(selectedCity)
-        .then(function (data) {
-            currentWeatherEL.html('');
-            displayCurrent(data.current, selectedCity);
-            displayForecast(data.forecast);
-        })
-        .catch(function (error) {
-            console.log('Error: ' + error.message);
-        });
-});//function not working
+
 
