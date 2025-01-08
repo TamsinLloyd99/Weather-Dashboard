@@ -27,7 +27,7 @@ $(document).ready(function () {
     // let iconURL;
 
     function getGeo(citySearch) {
-        var geoLocateURL = `http://api.openweathermap.org/geo/1.0/direct?q=${citySearch}&limit=5&appid=${API_KEY}`;
+        var geoLocateURL = `https://api.openweathermap.org/geo/1.0/direct?q=${citySearch}&limit=5&appid=${API_KEY}`;
         return fetch(geoLocateURL)
             .then(function (response) {
                 return response.json();
